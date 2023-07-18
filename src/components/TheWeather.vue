@@ -15,8 +15,12 @@
             placeholder="Search..."
         >
       </div>
-      <div class="weather-box">
-          <div class="temp">Temperature in {{weather.location.name}} now is {{ weather.current.temp_c }} °C and {{ weather.current.condition.text }}</div>
+      <div class="weather-box" v-if="query != ''">
+          <div class="temp" >Temperature in {{weather.location.name}} now is {{ weather.current.temp_c }} °C and {{ weather.current.condition.text }} </div>
+          <div><img class="current_icon" :src=weather.current.condition.icon alt=""></div>
+      </div>
+      <div class="weather-box" v-else-if="query == ''">
+        <div class="temp" >Temperature in {{weather.location.name}} now is {{ weather.current.temp_c }} °C and {{ weather.current.condition.text }} </div>
           <div><img class="current_icon" :src=weather.current.condition.icon alt=""></div>
       </div>
     </div>
@@ -55,10 +59,18 @@ export default {
           .then(this.setResults)
           .catch(err => console.log(err))
     },
-    
+    showLocal() {
+      fetch(`${this.url_base}/current.json?q='Saint Petersburg'&key=${this.API_KEY}`)
+          .then(res => res.json())
+          .then(this.setResults)
+          .catch(err => console.log(err))
+    },
     setResults(results) {
       this.weather = results
     },
+  },
+  mounted() {
+    this.showLocal()
   }
 }
 </script>
@@ -88,36 +100,36 @@ export default {
   }
   img {
     width: 10%;
-    padding: 2rem 2rem;
+    padding: 1rem 2rem;
   }
   .lower img {
-    padding: 2rem 3rem;
+    padding: 1rem 3rem;
   }
   .search-box input{
     padding: .5rem .5rem;
     border: none;
   }
   .weather-box {
-    margin: 1rem auto;
+    margin: 0 auto;
     max-width: 50%;
-    background-color: azure;
-    border-radius: 27px;
+    /* background-color: azure; */
+    /* border-radius: 27px; */
     padding: 1rem 1rem;
   }
   .weather-box .temp {
   display:          inline-block;
   padding:          10px 25px;
   color:           black;
-  font-size:        30px;
+  font-size:        20px;
   font-weight:      900;
   text-shadow:      3px 6px rgba(0, 0, 0, .25);
   background-color: rgba(255, 255, 255, .25);
   border-radius:    16px;
-  margin:           30px 0;
+  margin:           20px 0;
   box-shadow:       3px 6px rgba(0, 0, 0, .25);
 }
 .current_icon {
-  width: 55%;
+  width: 8%;
 }
 
 
